@@ -184,6 +184,7 @@ const Modal: React.FC<ModalProps> = ({
                     label={actionLabel}
                   />
                 </div>
+                {footer}
               </div>
             </div>
           </div>
