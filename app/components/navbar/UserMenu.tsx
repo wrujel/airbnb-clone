@@ -61,7 +61,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
           >
             <AiOutlineMenu />
             <div className="hidden md:block">
-              <Avatar />
+              <Avatar src={currentUser?.image} />
             </div>
           </div>
         </div>
@@ -88,6 +88,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                   <MenuItem onClick={() => {}} label="My reservations" />
                   <MenuItem onClick={() => {}} label="My properties" />
                   <MenuItem onClick={() => {}} label="Airbnb my home" />
+                  <hr />
                   <MenuItem onClick={() => signOut()} label="Logout" />
                 </>
               ) : (
