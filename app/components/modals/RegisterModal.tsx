@@ -3,7 +3,7 @@
 import axios from "axios";
 import { AiFillGithub } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
 import useRegisterModal from "../../hooks/useRegisterModal";
@@ -47,7 +47,7 @@ const RegisterModal = () => {
 
   const bodyContent = (
     <div className="flex flex-col gap-4">
-      <Heading title="Welcomo to Airbnb" subtitle="Create your account" />
+      <Heading title="Welcome to Airbnb" subtitle="Create your account" />
       <Input
         id="email"
         label="Email address"
@@ -57,7 +57,7 @@ const RegisterModal = () => {
         required
       />
       <Input
-        id="NAME"
+        id="name"
         label="Name"
         disabled={isLoading}
         register={register}
