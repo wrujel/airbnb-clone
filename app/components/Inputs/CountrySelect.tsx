@@ -7,7 +7,7 @@ export type CountrySelectValue = {
   label: string;
   value: string;
   flag: string;
-  latlng: [];
+  latlng: number[];
   region: string;
 };
 
