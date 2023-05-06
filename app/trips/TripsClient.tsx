@@ -23,22 +23,25 @@ const TripsClient: React.FC<TripsClientProps> = ({
   const router = useRouter();
   const [deletingId, setDeletingId] = useState("");
 
-  const onCancel = useCallback(async (id: string) => {
-    setDeletingId(id);
+  const onCancel = useCallback(
+    async (id: string) => {
+      setDeletingId(id);
 
-    axios
-      .delete(`/api/reservations/${id}`)
-      .then(() => {
-        toast.success("Reservation cancelled successfully");
-        router.refresh();
-      })
-      .catch((error) => {
-        toast.error(error?.response?.data?.message || "Something went wrong");
-      })
-      .finally(() => {
-        setDeletingId("");
-      });
-  }, []);
+      axios
+        .delete(`/api/reservations/${id}`)
+        .then(() => {
+          toast.success("Reservation cancelled successfully");
+          router.refresh();
+        })
+        .catch((error) => {
+          toast.error(error?.response?.data?.message || "Something went wrong");
+        })
+        .finally(() => {
+          setDeletingId("");
+        });
+    },
+    [router]
+  );
 
   return (
     <Container>

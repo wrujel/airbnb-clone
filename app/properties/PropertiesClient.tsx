@@ -21,22 +21,25 @@ const PropertiesClient: React.FC<PropertiesClientProps> = ({
   const router = useRouter();
   const [deletingId, setDeletingId] = useState("");
 
-  const onCancel = useCallback(async (id: string) => {
-    setDeletingId(id);
+  const onCancel = useCallback(
+    async (id: string) => {
+      setDeletingId(id);
 
-    axios
-      .delete(`/api/listings/${id}`)
-      .then(() => {
-        toast.success("Listing deleted successfully");
-        router.refresh();
-      })
-      .catch((error) => {
-        toast.error(error?.response?.data?.message || "Something went wrong");
-      })
-      .finally(() => {
-        setDeletingId("");
-      });
-  }, []);
+      axios
+        .delete(`/api/listings/${id}`)
+        .then(() => {
+          toast.success("Listing deleted successfully");
+          router.refresh();
+        })
+        .catch((error) => {
+          toast.error(error?.response?.data?.message || "Something went wrong");
+        })
+        .finally(() => {
+          setDeletingId("");
+        });
+    },
+    [router]
+  );
 
   return (
     <Container>
