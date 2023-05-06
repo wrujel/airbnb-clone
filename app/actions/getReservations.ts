@@ -34,7 +34,12 @@ export default async function getReservations(params: Reservation) {
       },
     });
 
-    return reservations;
+    return reservations.map((reservation) => ({
+      ...reservation,
+      listing: {
+        ...reservation.listing,
+      },
+    }));
   } catch (error: any) {
     throw new Error(error);
   }
