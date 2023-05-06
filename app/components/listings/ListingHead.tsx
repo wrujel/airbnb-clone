@@ -44,6 +44,7 @@ const ListingHead: React.FC<IListingHeadProps> = ({
           alt="Image"
           src={imageSrc}
           fill
+          sizes="100%"
           className="object-cover w-full"
         />
         <div className="absolute top-5 right-5">

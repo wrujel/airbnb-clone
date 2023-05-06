@@ -84,6 +84,8 @@ const ListingCard: React.FC<ListingCardProps> = ({
         >
           <Image
             fill
+            priority
+            sizes="100%"
             className="
               object-cover 
               h-full 
