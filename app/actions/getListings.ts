@@ -30,6 +30,14 @@ export default async function getListings(params: IListingParams) {
       query.userId = userId;
     }
 
+    if (category) {
+      query.category = category;
+    }
+
+    if (locationValue) {
+      query.locationValue = locationValue;
+    }
+
     if (guestCount) {
       query.guestCount = { gte: +guestCount };
     }
@@ -59,14 +67,6 @@ export default async function getListings(params: IListingParams) {
           },
         },
       };
-    }
-
-    if (locationValue) {
-      query.locationValue = locationValue;
-    }
-
-    if (category) {
-      query.category = category;
     }
 
     const listings = await prisma.listing.findMany({
