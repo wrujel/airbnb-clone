@@ -7,7 +7,7 @@ interface IListingParams {
   listingId?: string;
 }
 
-export async function DELETE(params: IListingParams) {
+export async function DELETE(request: Request, params: IListingParams) {
   const currenUser = await getCurrentUser();
 
   if (!currenUser) {
