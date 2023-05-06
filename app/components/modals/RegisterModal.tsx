@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import Button from "../Button";
 import { signIn } from "next-auth/react";
 import useLoginModal from "@/app/hooks/useLoginModal";
+import LoginModal from "./LoginModal";
 
 const RegisterModal = () => {
   const registerModal = useRegisterModal();
@@ -38,7 +39,9 @@ const RegisterModal = () => {
     axios
       .post("/api/register", data)
       .then(() => {
+        toast.success("Account created successfully");
         registerModal.onClose();
+        loginModal.onOpen();
       })
       .catch((error) => {
         toast.error("Something went wrong, please try again later");
