@@ -1,11 +1,13 @@
 "use client";
 
-import useCountries from "@/app/hooks/useCountries";
-import { Listing, Reservation, User } from "@prisma/client";
-import { format } from "date-fns";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
-import Image from "next/image";
+import { format } from "date-fns";
+
+import useCountries from "@/app/hooks/useCountries";
+import { Listing, Reservation, User } from "@prisma/client";
+
 import HeartButton from "../HeartButton";
 import Button from "../Button";
 
@@ -37,21 +39,27 @@ const ListingCard: React.FC<ListingCardProps> = ({
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
 
-      if (disabled) return;
+      if (disabled) {
+        return;
+      }
 
       onAction?.(actionId);
     },
-    [onAction, actionId, disabled]
+    [disabled, onAction, actionId]
   );
 
   const price = useMemo(() => {
-    if (reservation) return reservation.totalPrice;
+    if (reservation) {
+      return reservation.totalPrice;
+    }
 
     return data.price;
-  }, [data.price, reservation]);
+  }, [reservation, data.price]);
 
   const reservationDate = useMemo(() => {
-    if (!reservation) return null;
+    if (!reservation) {
+      return null;
+    }
 
     const start = new Date(reservation.startDate);
     const end = new Date(reservation.endDate);
@@ -62,38 +70,36 @@ const ListingCard: React.FC<ListingCardProps> = ({
   return (
     <div
       onClick={() => router.push(`/listings/${data.id}`)}
-      className="
-        col-span-1 cursor-pointer group
-      "
+      className="col-span-1 cursor-pointer group"
     >
       <div className="flex flex-col gap-2 w-full">
         <div
           className="
-            aspect-square
-            w-full
-            relative
-            overflow-hidden
+            aspect-square 
+            w-full 
+            relative 
+            overflow-hidden 
             rounded-xl
           "
         >
           <Image
             fill
-            alt="Listing"
-            src={data.imageSrc}
             className="
-              object-cover
-              h-full
-              w-full
-              group-hover:scale-110
+              object-cover 
+              h-full 
+              w-full 
+              group-hover:scale-110 
               transition
             "
+            src={data.imageSrc}
+            alt="Listing"
           />
           <div
             className="
-              absolute
-              top-3
-              right-3
-            "
+            absolute
+            top-3
+            right-3
+          "
           >
             <HeartButton listingId={data.id} currentUser={currentUser} />
           </div>
