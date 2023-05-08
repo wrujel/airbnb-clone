@@ -116,6 +116,7 @@ const ListingClient: React.FC<IListingClientProps> = ({
             md:grid-cols-7
             md:gap-10
             gap-6
+            align-center
           "
           >
             <ListingInfo
@@ -128,7 +129,8 @@ const ListingClient: React.FC<IListingClientProps> = ({
               locationValue={listing.locationValue}
             />
             <div
-              className="
+              className=" 
+                col-span-4               
                 order-first
                 mb-10
                 md:order-last
