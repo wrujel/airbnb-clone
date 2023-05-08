@@ -162,6 +162,8 @@
 </div>
 <br />
 
+Airbnb app clone with Next.js 13, that allows you to search for properties, add them to favorites, make reservations, login with Google, Github or Email, list your properties, and more.
+
 ## Features
 - [x] Responsive design with Tailwind CSS
 - [x] Show a list of cards with properties like Airbnb
