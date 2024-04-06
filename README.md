@@ -1,8 +1,13 @@
+[demo-link]: https://rental-app-delta.vercel.app/
+[demo]: https://img.shields.io/badge/🚀Live%20Demo-000000?style=for-the-badge&&logoColor=white&color=0a6bdb
+[tests-passed]: https://img.shields.io/badge/Test-Passed-success?style=for-the-badge&logo=github&logoColor=white&color=green
+[build]: https://img.shields.io/badge/Build-Passing-success?style=for-the-badge&logo=github&logoColor=white&color=green
+
 <div align='center'>
 
-  [![Deploy][deploy-active]](/) 
-  [![Tests][tests-passed]](/) 
-  [![Buy me a coffee][buy-me-a-coffee]][buy-me-a-coffee-link]
+  [![demo][demo]][demo-link]
+  [![build][build]](/)
+  [![test][tests-passed]](/)
 
 </div>
 
@@ -148,7 +153,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## Demo
 
-You can check out the demo [here](https://rental-app-delta.vercel.app/).
+You can check out the demo:
+
+[![demo][demo]][demo-link]
 
 
 
@@ -157,9 +164,6 @@ You can check out the demo [here](https://rental-app-delta.vercel.app/).
 
 
 <!-- Badges -->
-[deploy-active]: https://img.shields.io/badge/Deploy-Active-success?style=for-the-badge&logoColor=white
-[tests-passed]: https://img.shields.io/badge/Test-Passed-success?style=for-the-badge&color=green
-[buy-me-a-coffee]: https://img.shields.io/badge/Buy%20me%20a%20coffee-FF813F?style=for-the-badge&logo=buy-me-a-coffee
 [nextjs]: https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js
 [typescript]: https://img.shields.io/badge/Typescript-007ACC?style=for-the-badge&logo=typescript&logoColor=white&color=blue
 [tailwindcss]: https://img.shields.io/badge/Tailwind%20CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white
@@ -211,7 +215,6 @@ You can check out the demo [here](https://rental-app-delta.vercel.app/).
 [react-select]: https://img.shields.io/badge/React%20Select-gray?style=for-the-badge&logo=npm&logoColor=white
 
 <!-- Badges links -->
-[buy-me-a-coffee-link]: https://www.buymeacoffee.com/wrujel
 [nextjs-link]: https://nextjs.org/
 [typescript-link]: https://www.typescriptlang.org/
 [tailwindcss-link]: https://tailwindcss.com/
