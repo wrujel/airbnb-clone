@@ -1,13 +1,18 @@
+[demo]: https://img.shields.io/badge/🚀%20Live%20Demo-000000?style=for-the-badge&&logoColor=white&color=0a6bdb
+[status-link]: https://github.com/wrujel/monitor-repos
+[tests-link]: https://github.com/wrujel/monitor-tests
+
 [demo-link]: https://rental-app-delta.vercel.app/
-[demo]: https://img.shields.io/badge/🚀Live%20Demo-000000?style=for-the-badge&&logoColor=white&color=0a6bdb
-[tests-passed]: https://img.shields.io/badge/Test-Passed-success?style=for-the-badge&logo=github&logoColor=white&color=green
-[build]: https://img.shields.io/badge/Build-Passing-success?style=for-the-badge&logo=github&logoColor=white&color=green
+[status]: https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fwrujel%2Fmonitor-repos%2Fmain%2Fdata%2Fairbnb-clone.json
+[deploy]: https://img.shields.io/github/deployments/wrujel/airbnb-clone/production?style=for-the-badge&label=Deploy
+[tests]: https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fwrujel%2Fmonitor-tests%2Fmain%2Fdata%2Fairbnb-clone.json
 
 <div align='center'>
 
   [![demo][demo]][demo-link]
-  [![build][build]](/)
-  [![test][tests-passed]](/)
+  [![status][status]][status-link]
+  [![deploy][deploy]](/)
+  [![test][tests]][tests-link]
 
 </div>
 
