@@ -2,7 +2,7 @@
 [status-link]: https://github.com/wrujel/monitor-repos
 [tests-link]: https://github.com/wrujel/monitor-tests
 
-[demo-link]: https://rental-app-delta.vercel.app/
+[demo-link]: https://demo-airbnb-clone-three-phi-45.vercel.app/
 [status]: https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fwrujel%2Fmonitor-repos%2Fmain%2Fdata%2Fairbnb-clone.json
 [deploy]: https://img.shields.io/github/deployments/wrujel/airbnb-clone/production?style=for-the-badge&label=Deploy
 [tests]: https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fwrujel%2Fmonitor-tests%2Fmain%2Fdata%2Fairbnb-clone.json
@@ -59,7 +59,7 @@
 <div align='center'>
   Airbnb app clone with Next.js 13, that allows you to search for properties, add them to favorites, make reservations, login with Google, Github or Email, list your properties, and more.
 
-  [Demo](https://rental-app-delta.vercel.app/) · [Report issue](/issues) · [Suggest something](/issues)
+  [Demo](https://demo-airbnb-clone-three-phi-45.vercel.app) · [Report issue](/issues) · [Suggest something](/issues)
 </div>
 
 ## Table of Contents
