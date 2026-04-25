@@ -13,6 +13,9 @@ export default async function getFavoriteListings() {
           in: [...(currentUser.favoriteIds || [])],
         },
       },
+      orderBy: {
+        createdAt: "asc",
+      },
     });
 
     return favorites;

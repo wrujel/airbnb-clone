@@ -30,7 +30,7 @@ export default async function getReservations(params: Reservation) {
         listing: true,
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: "asc",
       },
     });
 
