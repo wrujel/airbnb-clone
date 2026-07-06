@@ -10,7 +10,7 @@
 <div align='center'>
   <a href='/'>
     <img
-      src='screenshot.png'
+      src='screenshot.webp'
       alt='Screenshot of the app'
       width='100%'
     />
