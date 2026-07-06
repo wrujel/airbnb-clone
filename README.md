@@ -45,7 +45,7 @@
 <div align='center'>
   Airbnb clone app for vacation rentals, built with Next.js 13, TypeScript, Tailwind CSS, Prisma, MongoDB, and NextAuth. Allows users to browse listings, make reservations, manage properties, and save favorites.
 
-  [Demo]({{DEMO_URL}}) · [Report issue](/issues) · [Suggest something](/issues)
+  [Demo][demo-link] · [Report issue](/issues) · [Suggest something](/issues)
 </div>
 
 ## Table of Contents
