@@ -20,7 +20,7 @@
 <!-- TODO: Add a screenshot at /public/images/screenshot.png -->
 
 <div align='center'>
-  <h1>Airbnb Clone with Next.js 13</h1>
+  <h1>Airbnb Clone with Next.js</h1>
 </div>
 
 <div align='center'>
