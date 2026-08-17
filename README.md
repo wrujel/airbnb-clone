@@ -10,7 +10,7 @@
 <div align='center'>
   <a href='/'>
     <img
-      src='/public/screenshot.png'
+      src='screenshot.webp'
       alt='Screenshot of the app'
       width='100%'
     />
@@ -20,7 +20,7 @@
 <!-- TODO: Add a screenshot at /public/images/screenshot.png -->
 
 <div align='center'>
-  <h1>Airbnb Clone with Next.js 13</h1>
+  <h1>Airbnb Clone with Next.js</h1>
 </div>
 
 <div align='center'>
@@ -45,7 +45,7 @@
 <div align='center'>
   Airbnb clone app for vacation rentals, built with Next.js 13, TypeScript, Tailwind CSS, Prisma, MongoDB, and NextAuth. Allows users to browse listings, make reservations, manage properties, and save favorites.
 
-  [Demo]({{DEMO_URL}}) · [Report issue](/issues) · [Suggest something](/issues)
+  [Demo][demo-link] · [Report issue](/issues) · [Suggest something](/issues)
 </div>
 
 ## Table of Contents
