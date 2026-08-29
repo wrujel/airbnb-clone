@@ -25,6 +25,8 @@ enum STEPS {
   PRICE = 5,
 }
 
+const Map = dynamic(() => import("../Map"), { ssr: false });
+
 const RentModal = () => {
   const rentModal = useRentModal();
   const [step, setStep] = useState(STEPS.CATEGORY);
@@ -59,13 +61,7 @@ const RentModal = () => {
   const bathroomCount = watch("bathroomCount");
   const imageSrc = watch("imageSrc");
 
-  const Map = useMemo(
-    () => dynamic(() => import("../Map"), { ssr: false }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [location]
-  );
-
-  const setCustomValue = (id: string, value: any) => {
+  const setCustomValue = (id: string, value: unknown) => {
     setValue(id, value, {
       shouldValidate: true,
       shouldDirty: true,
@@ -163,7 +159,7 @@ const RentModal = () => {
           onChange={(value) => setCustomValue("location", value)}
           value={location}
         />
-        <Map center={location?.latlng} />
+        <Map key={location?.value} center={location?.latlng} />
       </div>
     );
   }

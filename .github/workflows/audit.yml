@@ -1,0 +1,84 @@
+# Dependency vulnerabilities, reported back to the Content Studio.
+#
+# The studio's scheduler dispatches this MONTHLY (and on demand), waits for the
+# run, and reads the MONITOR_AUDIT line below into the project's "Deps" tag and
+# the Monitoring dashboard's advisories list. Nothing is committed here and no
+# secret is needed.
+#
+# The audit command must NOT fail this workflow when vulnerabilities exist
+# (report, don't gate) — a red run means the tooling itself broke.
+name: Audit
+
+on:
+  workflow_dispatch: # the studio's scheduler is the only trigger
+
+concurrency:
+  group: audit-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The pnpm version comes from `packageManager` in package.json.
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # Lockfile-only: no install. `|| true` is load-bearing — pnpm audit
+      # exits non-zero when vulns exist, which is the normal case being
+      # reported. pnpm emits the npm-v6 report shape.
+      - name: Audit dependencies
+        run: pnpm audit --json > audit.json || true
+
+      # `always()`: a failing audit step still wrote what it wrote, and a
+      # MISSING report must emit NOTHING (reads as "No report"), never zeros.
+      - name: Report to the studio
+        if: always()
+        run: |
+          node -e '
+            const fs = require("fs");
+            let out = null;
+
+            try {
+              const a = JSON.parse(fs.readFileSync("audit.json", "utf8"));
+              const m = a.metadata && a.metadata.vulnerabilities;
+
+              if (m) {
+                const counts = {
+                  critical: m.critical | 0,
+                  high: m.high | 0,
+                  moderate: m.moderate | 0,
+                  low: (m.low | 0) + (m.info | 0),
+                };
+
+                const advisories = [];
+                for (const v of Object.values(a.advisories || {})) {
+                  if (advisories.length >= 20) break;
+                  advisories.push({
+                    package: v.module_name,
+                    severity: String(v.severity || "unknown").toLowerCase(),
+                    ...(v.title ? { title: String(v.title).slice(0, 200) } : {}),
+                    ...(v.url ? { url: v.url } : {}),
+                  });
+                }
+
+                const total =
+                  counts.critical + counts.high + counts.moderate + counts.low;
+                out = { v: 1, counts, total, advisories };
+              }
+            } catch {}
+
+            if (out) {
+              console.log("::notice title=audit::MONITOR_AUDIT " + JSON.stringify(out));
+            } else {
+              console.log("::warning::no readable audit report — emitting no sentinel");
+            }
+          '

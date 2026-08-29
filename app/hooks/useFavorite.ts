@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { toast } from "react-hot-toast";
 
 import { User } from "@prisma/client";
@@ -41,7 +41,7 @@ const useFavorite = ({ listingId, currentUser }: IUseFavorite) => {
         }
 
         router.refresh();
-      } catch (error) {
+      } catch {
         toast.error("Something went wrong.");
       }
     },

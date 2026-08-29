@@ -1,0 +1,29 @@
+# Dependencies whose install/postinstall scripts are allowed to run.
+# pnpm blocks these by default; each one below is required for the build:
+#   @prisma/client / @prisma/engines / prisma -> download engines + generate the client
+#   bcrypt                                    -> fetch the prebuilt native binding
+#   unrs-resolver                             -> native resolver used by eslint-import-resolver-typescript
+allowBuilds:
+  '@prisma/client': true
+  '@prisma/engines': true
+  bcrypt: true
+  prisma: true
+  unrs-resolver: true
+
+# Same list under the pnpm 10 key, so an older pnpm (e.g. a build image that has
+# not caught up) still allows these installs to build.
+onlyBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
+  - bcrypt
+  - prisma
+  - unrs-resolver
+
+minimumReleaseAgeExclude:
+  - '@vitejs/plugin-react@6.1.1'
+
+# Transitive security fixes.
+#   deepmerge-ts <8 -> stack exhaustion on recursive graphs (GHSA-ggr8-5vv4-36mx).
+#   Reached through prisma > @prisma/config, which still pins ^7.
+overrides:
+  deepmerge-ts: '^8.0.2'

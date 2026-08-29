@@ -1,13 +1,12 @@
 "use client";
 
-import { CldUploadWidget } from "next-cloudinary";
+import {
+  CldUploadWidget,
+  type CloudinaryUploadWidgetResults,
+} from "next-cloudinary";
 import { useCallback } from "react";
 import { TbPhotoPlus } from "react-icons/tb";
 import Image from "next/image";
-
-declare global {
-  var cloudinary: any;
-}
 
 interface ImageUploadProps {
   onChange: (value: string) => void;
@@ -16,15 +15,19 @@ interface ImageUploadProps {
 
 const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value }) => {
   const handleUpload = useCallback(
-    (result: any) => {
-      onChange(result.info.secure_url);
+    (result: CloudinaryUploadWidgetResults) => {
+      const info = result.info;
+
+      if (info && typeof info !== "string") {
+        onChange(info.secure_url);
+      }
     },
     [onChange]
   );
 
   return (
     <CldUploadWidget
-      onUpload={handleUpload}
+      onSuccess={handleUpload}
       uploadPreset="Airbnb-clone"
       options={{
         maxFiles: 1,
@@ -53,7 +56,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value }) => {
       {({ open }) => {
         return (
           <div
-            onClick={() => (open ? open() : {})}
+            onClick={() => open?.()}
             className="
               relative
               cursor-pointer

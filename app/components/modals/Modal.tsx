@@ -32,6 +32,9 @@ const Modal: React.FC<ModalProps> = ({
   const [showModal, setShowModal] = useState(isOpen);
 
   useEffect(() => {
+    // Drives the open/close transition: the modal renders in its "closed"
+    // position first, then animates once this state catches up with the prop.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setShowModal(isOpen);
   }, [isOpen]);
 

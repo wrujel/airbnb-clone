@@ -10,7 +10,7 @@ import { Listing, Reservation, User } from "@prisma/client";
 import axios from "axios";
 import { differenceInCalendarDays, eachDayOfInterval } from "date-fns";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Range } from "react-date-range";
 import toast from "react-hot-toast";
 
@@ -52,8 +52,22 @@ const ListingClient: React.FC<IListingClientProps> = ({
   }, [reservations]);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [totalPrice, setTotalPrice] = useState(listing.price);
   const [dateRange, setDateRange] = useState<Range>(initialDateRange);
+
+  const totalPrice = useMemo(() => {
+    if (dateRange.startDate && dateRange.endDate) {
+      const dayCount = differenceInCalendarDays(
+        dateRange.endDate,
+        dateRange.startDate
+      );
+
+      if (dayCount && listing.price) {
+        return dayCount * listing.price;
+      }
+    }
+
+    return listing.price;
+  }, [dateRange, listing.price]);
 
   const onCreateReservation = useCallback(async () => {
     if (!currentUser) {
@@ -67,7 +81,7 @@ const ListingClient: React.FC<IListingClientProps> = ({
         totalPrice,
         startDate: dateRange.startDate,
         endDate: dateRange.endDate,
-        listingId: listing?.id,
+        listingId: listing.id,
       })
       .then(() => {
         toast.success("Reservation created successfully");
@@ -77,22 +91,7 @@ const ListingClient: React.FC<IListingClientProps> = ({
       .finally(() => {
         setIsLoading(false);
       });
-  }, [totalPrice, dateRange, listing?.id, currentUser, loginModal, router]);
-
-  useEffect(() => {
-    if (dateRange.startDate && dateRange.endDate) {
-      const dayCount = differenceInCalendarDays(
-        dateRange.endDate,
-        dateRange.startDate
-      );
-
-      if (dayCount && listing.price) {
-        setTotalPrice(dayCount * listing.price);
-      } else {
-        setTotalPrice(listing.price);
-      }
-    }
-  }, [dateRange, listing.price]);
+  }, [totalPrice, dateRange, listing.id, currentUser, loginModal, router]);
 
   const category = useMemo(() => {
     return categories.find((item) => item.label === listing.category);

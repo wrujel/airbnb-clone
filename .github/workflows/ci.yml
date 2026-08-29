@@ -1,0 +1,124 @@
+# Lint, types and unit tests — reported back to the Content Studio.
+#
+# The studio's scheduler dispatches this daily and then READS the run: its
+# conclusion becomes the project's "unit tests" tag, and the MONITOR_COVERAGE
+# line below becomes its "coverage %" tag and the shields endpoint the studio
+# publishes. Nothing is committed here and no secret is needed.
+#
+# `next build` is deliberately NOT part of this workflow: Next prerenders the
+# authenticated routes at build time, which reaches Prisma and so needs live
+# DATABASE_URL credentials. Vercel builds on every deploy with those in place.
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# A newer run supersedes an in-flight one on the same ref — the daily dispatch
+# must not queue behind a push.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: "24"
+
+jobs:
+  quality:
+    name: Lint and types
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Must precede setup-node so its pnpm cache can resolve the store.
+      # The version comes from the `packageManager` field in package.json.
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      # Runs the repo's postinstall (`prisma generate`), which needs no
+      # DATABASE_URL — it only reads prisma/schema.prisma.
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+  coverage:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # The vitest config already writes json-summary + lcov and enforces the
+      # project's 100% thresholds; the extra json reporter carries test counts.
+      - name: Run tests with coverage
+        run: >-
+          pnpm test:coverage
+          --reporter=default
+          --reporter=json
+          --outputFile.json=.vitest.json
+
+      # `always()`: a failing suite still measured something, and the studio
+      # shows the red tag NEXT TO a real percentage.
+      - name: Report to the studio
+        if: always()
+        run: |
+          node -e '
+            const fs = require("fs");
+            const out = { pct: null };
+
+            try {
+              const t = JSON.parse(
+                fs.readFileSync("coverage/coverage-summary.json", "utf8")
+              ).total.lines;
+              // covered:0/total:0 means nothing was instrumented -> stay null.
+              if (t.total > 0) {
+                out.pct = t.pct;
+                out.lines = { covered: t.covered, total: t.total };
+              }
+            } catch {}
+
+            try {
+              const r = JSON.parse(fs.readFileSync(".vitest.json", "utf8"));
+              out.tests = {
+                passed: r.numPassedTests,
+                failed: r.numFailedTests,
+                skipped: r.numPendingTests,
+              };
+            } catch {}
+
+            console.log(
+              "::notice title=coverage::MONITOR_COVERAGE " + JSON.stringify(out)
+            );
+          '
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/
+          retention-days: 14

@@ -21,6 +21,8 @@ enum STEPS {
   INFO = 2,
 }
 
+const Map = dynamic(() => import("../Map"), { ssr: false });
+
 const SearchModal = () => {
   const router = useRouter();
   const searchModal = useSearchModal();
@@ -38,15 +40,6 @@ const SearchModal = () => {
     key: "selection",
   });
 
-  const Map = useMemo(
-    () =>
-      dynamic(() => import("../Map"), {
-        ssr: false,
-      }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [location]
-  );
-
   const onBack = useCallback(() => {
     setStep((value) => value - 1);
   }, []);
@@ -60,13 +53,13 @@ const SearchModal = () => {
       return onNext();
     }
 
-    let currentQuery = {};
+    let currentQuery: qs.StringifiableRecord = {};
 
     if (params) {
       currentQuery = qs.parse(params.toString());
     }
 
-    const updatedQuery: any = {
+    const updatedQuery: qs.StringifiableRecord = {
       ...currentQuery,
       locationValue: location?.value,
       guestCount,
@@ -133,7 +126,7 @@ const SearchModal = () => {
         onChange={(value) => setLocation(value as CountrySelectValue)}
       />
       <hr />
-      <Map center={location?.latlng} />
+      <Map key={location?.value} center={location?.latlng} />
     </div>
   );
 
