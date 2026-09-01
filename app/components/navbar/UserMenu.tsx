@@ -1,7 +1,7 @@
 "use client";
 
 import { AiOutlineMenu } from "react-icons/ai";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { User } from "@prisma/client";
 import { signOut } from "next-auth/react";
 
@@ -22,9 +22,51 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
   const loginModal = useLoginModal();
   const rentModal = useRentModal();
   const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   const toggleOpen = useCallback(() => setIsOpen((prev) => !prev), []);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const closeOnOutsidePress = (event: MouseEvent) => {
+      // The ref spans the trigger too, so pressing the avatar falls through to
+      // `toggleOpen` instead of being closed here and reopened by the click.
+      if (menuRef.current?.contains(event.target as Node)) {
+        return;
+      }
+
+      setIsOpen(false);
+    };
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") {
+        return;
+      }
+
+      setIsOpen(false);
+    };
+
+    document.addEventListener("mousedown", closeOnOutsidePress);
+    document.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", closeOnOutsidePress);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [isOpen]);
+
+  // Every entry either navigates away or opens a modal, so the menu has no
+  // reason to stay behind once one is picked.
+  const selectItem = useCallback((action: () => void) => {
+    return () => {
+      setIsOpen(false);
+      action();
+    };
+  }, []);
 
   const onRent = useCallback(() => {
     if (!currentUser) {
@@ -35,7 +77,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
 
   return (
     <div>
-      <div className="relative">
+      <div className="relative" ref={menuRef}>
         <div className="flex flex-row items-center gap-3">
           <div
             onClick={onRent}
@@ -97,29 +139,38 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
               {currentUser ? (
                 <>
                   <MenuItem
-                    onClick={() => router.push("/trips")}
+                    onClick={selectItem(() => router.push("/trips"))}
                     label="My trips"
                   />
                   <MenuItem
-                    onClick={() => router.push("/favorites")}
+                    onClick={selectItem(() => router.push("/favorites"))}
                     label="My favorites"
                   />
                   <MenuItem
-                    onClick={() => router.push("/reservations")}
+                    onClick={selectItem(() => router.push("/reservations"))}
                     label="My reservations"
                   />
                   <MenuItem
-                    onClick={() => router.push("/properties")}
+                    onClick={selectItem(() => router.push("/properties"))}
                     label="My properties"
                   />
-                  <MenuItem onClick={rentModal.onOpen} label="Airbnb my home" />
+                  <MenuItem
+                    onClick={selectItem(rentModal.onOpen)}
+                    label="Airbnb my home"
+                  />
                   <hr />
-                  <MenuItem onClick={() => signOut()} label="Logout" />
+                  <MenuItem onClick={selectItem(signOut)} label="Logout" />
                 </>
               ) : (
                 <>
-                  <MenuItem onClick={loginModal.onOpen} label="Login" />
-                  <MenuItem onClick={registerModal.onOpen} label="Sign up" />
+                  <MenuItem
+                    onClick={selectItem(loginModal.onOpen)}
+                    label="Login"
+                  />
+                  <MenuItem
+                    onClick={selectItem(registerModal.onOpen)}
+                    label="Sign up"
+                  />
                 </>
               )}
             </div>

@@ -67,6 +67,76 @@ describe("Modal", () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
+  it("closes when the backdrop is pressed", () => {
+    vi.useFakeTimers();
+    const onClose = vi.fn();
+
+    const { container } = render(
+      <Modal {...baseProps} isOpen onClose={onClose} />,
+    );
+
+    fireEvent.mouseDown(container.firstChild as HTMLElement);
+
+    act(() => {
+      vi.advanceTimersByTime(300);
+    });
+
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("stays open when the press starts inside the panel", () => {
+    vi.useFakeTimers();
+    const onClose = vi.fn();
+
+    render(
+      <Modal
+        {...baseProps}
+        isOpen
+        onClose={onClose}
+        body={<p>body content</p>}
+      />,
+    );
+
+    // A drag that begins on the panel and ends on the backdrop must not close.
+    fireEvent.mouseDown(screen.getByText("body content"));
+
+    act(() => {
+      vi.advanceTimersByTime(300);
+    });
+
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
+  it("closes on Escape", () => {
+    vi.useFakeTimers();
+    const onClose = vi.fn();
+
+    render(<Modal {...baseProps} isOpen onClose={onClose} />);
+
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    act(() => {
+      vi.advanceTimersByTime(300);
+    });
+
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("ignores every other key", () => {
+    vi.useFakeTimers();
+    const onClose = vi.fn();
+
+    render(<Modal {...baseProps} isOpen onClose={onClose} />);
+
+    fireEvent.keyDown(document, { key: "Enter" });
+
+    act(() => {
+      vi.advanceTimersByTime(300);
+    });
+
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
   it("runs the secondary action", async () => {
     const secondaryAction = vi.fn();
     render(
@@ -96,7 +166,7 @@ describe("Modal", () => {
     const onSubmit = vi.fn();
     const secondaryAction = vi.fn();
 
-    render(
+    const { container } = render(
       <Modal
         {...baseProps}
         isOpen
@@ -110,6 +180,7 @@ describe("Modal", () => {
 
     const [close] = screen.getAllByRole("button");
     await userEvent.click(close);
+    fireEvent.mouseDown(container.firstChild as HTMLElement);
     await userEvent.click(screen.getByRole("button", { name: "Continue" }));
     await userEvent.click(screen.getByRole("button", { name: "Back" }));
 

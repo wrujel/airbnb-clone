@@ -62,4 +62,30 @@ describe("HeartButton", () => {
     expect(useLoginModal.getState().isOpen).toBe(true);
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
+
+  it("fills the heart before the save comes back", async () => {
+    const { container } = render(
+      <HeartButton listingId="listing-1" currentUser={makeUser()} />,
+    );
+
+    await userEvent.click(container.firstChild as HTMLElement);
+
+    // `currentUser` still lists no favorites: this is the optimistic render.
+    expect(container.querySelector("svg.fill-rose-500")).toBeInTheDocument();
+  });
+
+  it("puts the heart back when the save fails", async () => {
+    mockedAxios.post.mockRejectedValueOnce(new Error("boom"));
+
+    const { container } = render(
+      <HeartButton listingId="listing-1" currentUser={makeUser()} />,
+    );
+
+    await userEvent.click(container.firstChild as HTMLElement);
+
+    expect(
+      container.querySelector("svg.fill-neutral-500\\/70"),
+    ).toBeInTheDocument();
+    expect(toast.error).toHaveBeenCalledWith("Something went wrong.");
+  });
 });

@@ -49,6 +49,38 @@ const Modal: React.FC<ModalProps> = ({
     }, 300);
   }, [disabled, onClose]);
 
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") {
+        return;
+      }
+
+      handleClose();
+    };
+
+    document.addEventListener("keydown", closeOnEscape);
+
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [handleClose, isOpen]);
+
+  const handleOverlayMouseDown = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      // Only a press landing on the backdrop itself dismisses the modal.
+      // Listening on mousedown rather than click keeps a text selection that
+      // starts inside the panel and ends on the backdrop from closing it.
+      if (event.target !== event.currentTarget) {
+        return;
+      }
+
+      handleClose();
+    },
+    [handleClose]
+  );
+
   const handleSubmit = useCallback(() => {
     if (disabled) {
       return;
@@ -70,6 +102,7 @@ const Modal: React.FC<ModalProps> = ({
   return (
     <>
       <div
+        onMouseDown={handleOverlayMouseDown}
         className="
           justify-center
           items-center

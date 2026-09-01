@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -161,10 +161,13 @@ describe("UserMenu", () => {
     expect(useLoginModal.getState().isOpen).toBe(true);
     expect(useRentModal.getState().isOpen).toBe(false);
 
-    await userEvent.click(screen.getByRole("img", { hidden: true }));
+    const toggle = screen.getByRole("img", { hidden: true });
+
+    await userEvent.click(toggle);
     await userEvent.click(screen.getByText("Login"));
     expect(useLoginModal.getState().isOpen).toBe(true);
 
+    await userEvent.click(toggle);
     await userEvent.click(screen.getByText("Sign up"));
     expect(useRegisterModal.getState().isOpen).toBe(true);
   });
@@ -180,25 +183,39 @@ describe("UserMenu", () => {
   it("links to the signed-in areas and can sign out", async () => {
     render(<UserMenu currentUser={makeUser()} />);
 
-    await userEvent.click(screen.getByRole("img", { hidden: true }));
+    const toggle = screen.getByRole("img", { hidden: true });
+    // Picking an entry closes the menu, so each one needs it reopened first.
+    const pick = async (label: string) => {
+      await userEvent.click(toggle);
+      await userEvent.click(screen.getByText(label));
+    };
 
-    await userEvent.click(screen.getByText("My trips"));
+    await pick("My trips");
     expect(routerMock.push).toHaveBeenCalledWith("/trips");
 
-    await userEvent.click(screen.getByText("My favorites"));
+    await pick("My favorites");
     expect(routerMock.push).toHaveBeenCalledWith("/favorites");
 
-    await userEvent.click(screen.getByText("My reservations"));
+    await pick("My reservations");
     expect(routerMock.push).toHaveBeenCalledWith("/reservations");
 
-    await userEvent.click(screen.getByText("My properties"));
+    await pick("My properties");
     expect(routerMock.push).toHaveBeenCalledWith("/properties");
 
-    await userEvent.click(screen.getByText("Airbnb my home"));
+    await pick("Airbnb my home");
     expect(useRentModal.getState().isOpen).toBe(true);
 
-    await userEvent.click(screen.getByText("Logout"));
+    await pick("Logout");
     expect(signOut).toHaveBeenCalledTimes(1);
+  });
+
+  it("dismisses the menu once an entry is picked", async () => {
+    render(<UserMenu currentUser={makeUser()} />);
+
+    await userEvent.click(screen.getByRole("img", { hidden: true }));
+    await userEvent.click(screen.getByText("My trips"));
+
+    expect(screen.queryByText("My trips")).not.toBeInTheDocument();
   });
 
   it("closes the menu again", async () => {
@@ -209,6 +226,38 @@ describe("UserMenu", () => {
     expect(screen.getByText("My trips")).toBeInTheDocument();
 
     await userEvent.click(toggle);
+    expect(screen.queryByText("My trips")).not.toBeInTheDocument();
+  });
+
+  it("closes the menu on Escape", async () => {
+    render(<UserMenu currentUser={makeUser()} />);
+
+    await userEvent.click(screen.getByRole("img", { hidden: true }));
+    expect(screen.getByText("My trips")).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    expect(screen.queryByText("My trips")).not.toBeInTheDocument();
+  });
+
+  it("leaves the menu open on every other key", async () => {
+    render(<UserMenu currentUser={makeUser()} />);
+
+    await userEvent.click(screen.getByRole("img", { hidden: true }));
+
+    fireEvent.keyDown(document, { key: "Enter" });
+
+    expect(screen.getByText("My trips")).toBeInTheDocument();
+  });
+
+  it("closes the menu when the press lands outside it", async () => {
+    render(<UserMenu currentUser={makeUser()} />);
+
+    await userEvent.click(screen.getByRole("img", { hidden: true }));
+    expect(screen.getByText("My trips")).toBeInTheDocument();
+
+    fireEvent.mouseDown(document.body);
+
     expect(screen.queryByText("My trips")).not.toBeInTheDocument();
   });
 });
