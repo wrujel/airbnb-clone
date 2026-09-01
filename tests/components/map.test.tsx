@@ -54,4 +54,30 @@ describe("Map", () => {
       "[-10,-76]",
     );
   });
+
+  it("reads the URL off an asset object when the bundler builds one", async () => {
+    // Turbopack hands back a StaticImageData object rather than a bare URL for
+    // some assets; re-import the module with that shape to cover both.
+    vi.resetModules();
+    vi.doMock("leaflet/dist/images/marker-icon-2x.png", () => ({
+      default: { src: "/marker-icon-2x.png" },
+    }));
+    vi.doMock("leaflet/dist/images/marker-icon.png", () => ({
+      default: { src: "/marker-icon.png" },
+    }));
+    vi.doMock("leaflet/dist/images/marker-shadow.png", () => ({
+      default: { src: "/marker-shadow.png" },
+    }));
+
+    await import("@/app/components/Map");
+    const { Icon } = (await import("leaflet")).default;
+
+    expect(Icon.Default.prototype.options.iconRetinaUrl).toBe(
+      "/marker-icon-2x.png",
+    );
+    expect(Icon.Default.prototype.options.iconUrl).toBe("/marker-icon.png");
+    expect(Icon.Default.prototype.options.shadowUrl).toBe(
+      "/marker-shadow.png",
+    );
+  });
 });

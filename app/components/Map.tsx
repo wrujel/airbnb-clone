@@ -5,15 +5,21 @@ import { MapContainer, TileLayer, Marker } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
-import marketIcon from "leaflet/dist/images/marker-icon.png";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
+
+// Turbopack only builds StaticImageData for project-local images; assets pulled
+// out of node_modules arrive as a bare URL string. Next's types declare both as
+// StaticImageData, so reading `.src` here typechecks but is undefined at runtime.
+const assetUrl = (asset: string | { src: string }) =>
+  typeof asset === "string" ? asset : asset.src;
 
 // @ts-expect-error -- Leaflet keeps `_getIconUrl` off its public types
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: markerIcon2x.src,
-  iconUrl: marketIcon.src,
-  shadowUrl: markerShadow.src,
+  iconRetinaUrl: assetUrl(markerIcon2x),
+  iconUrl: assetUrl(markerIcon),
+  shadowUrl: assetUrl(markerShadow),
 });
 
 interface MapProps {
