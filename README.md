@@ -11,7 +11,7 @@
   <a href='/'>
     <img
       src='screenshot.webp'
-      alt='Screenshot of the app'
+      alt='Airbnb clone home page with a category filter bar and a grid of rental listing cards showing photos, location, nightly price and favorite hearts.'
       width='100%'
     />
   </a>
@@ -43,7 +43,7 @@
 </div>
 
 <div align='center'>
-  Airbnb clone app for vacation rentals, built with Next.js 13, TypeScript, Tailwind CSS, Prisma, MongoDB, and NextAuth. Allows users to browse listings, make reservations, manage properties, and save favorites.
+  An Airbnb clone for vacation rentals, built with Next.js 13, TypeScript, Tailwind CSS, Prisma, MongoDB and NextAuth. Filter listings by location, date range, guests and rooms, explore them on an interactive Leaflet map, reserve stays on a calendar, upload your own properties, and track trips and favorites.
 
   [Demo][demo-link] · [Report issue](/issues) · [Suggest something](/issues)
 </div>
