@@ -24,13 +24,9 @@ jobs:
     runs-on: ubuntu-latest
     # GHSA ids left out of the report, comma-separated. Only advisories with
     # no patched release belong here, each with its reason and exit condition:
-    #   GHSA-vfj7-8cjw-p6xm  braces <=3.0.3 has no patched release (checked
-    #     2026-10-20). Reached only through the lint toolchain:
-    #     eslint-config-next > @next/eslint-plugin-next > fast-glob 3.3.1
-    #     (pinned) > micromatch. Remove once braces 3.0.4 ships and the
-    #     lockfile is refreshed.
+    #   (none: GHSA-vfj7-8cjw-p6xm, braces, was withdrawn 2026-10-23)
     env:
-      AUDIT_IGNORE: GHSA-vfj7-8cjw-p6xm
+      AUDIT_IGNORE: ""
     steps:
       - uses: actions/checkout@v4
 

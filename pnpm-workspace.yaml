@@ -27,3 +27,8 @@ minimumReleaseAgeExclude:
 #   Reached through prisma > @prisma/config, which still pins ^7.
 overrides:
   deepmerge-ts: '^8.0.2'
+  # GHSA-7589-6fvf-x4pw: effect <=3.22.0 has a ReDoS in Schema.TemplateLiteral.
+  # @prisma/config pins effect exactly (6.19.3 -> 3.21.0; even 7.10.1 pins
+  # 3.20.0), so no prisma release can lift it. Remove once the prisma in use
+  # pins effect >=3.22.1.
+  '@prisma/config>effect': 3.22.1

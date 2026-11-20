@@ -24,9 +24,9 @@
     "bcrypt": "^6.0.0",
     "date-fns": "^4.4.0",
     "leaflet": "^1.9.4",
-    "next": "^16.3.8",
+    "next": "^16.4.6",
     "next-auth": "^4.24.15",
-    "next-cloudinary": "^6.18.8",
+    "next-cloudinary": "^7.1.1",
     "query-string": "^9.5.0",
     "react": "^19.2.8",
     "react-date-range": "^2.0.1",
@@ -53,13 +53,13 @@
     "@types/react-date-range": "^1.4.10",
     "@types/react-dom": "^19.2.5",
     "@vitejs/plugin-react": "^6.1.1",
-    "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/coverage-v8": "^4.1.12",
     "eslint": "^9.39.5",
-    "eslint-config-next": "^16.3.8",
+    "eslint-config-next": "^16.4.6",
     "jsdom": "^30.0.1",
     "prisma": "^6.19.3",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.12"
   }
 }
